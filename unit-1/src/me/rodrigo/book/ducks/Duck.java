@@ -18,4 +18,12 @@ public abstract class Duck {
     public void swim() {
         System.out.println("All ducks float, even decoys!");
     }
+
+    public void setFlyBehavior (FlyBehiavior fb) {
+        flyBehiavior = fb;
+    }
+
+    public void setQuackBehavior (QuackBehavior qb) {
+        quackBehavior = qb;
+    }
 }
