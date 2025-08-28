@@ -1,21 +1,26 @@
 package me.rodrigo.book.weatherStation;
 
+import java.util.Observer;
+import java.util.Observable;
+
 public class ForecastDisplay implements Observer, DisplayElement{
+    Observable observable;
     public float currentPressure = 29.92f;
     public float lastPressure;
-    public Subject weatherData;
 
-    public ForecastDisplay(WeatherData weatherData) {
-        this.weatherData = weatherData;
-        weatherData.registerObserver(this);
+    public ForecastDisplay(Observable observable) {
+        this.observable = observable;
+        observable.addObserver(this);
     }
 
-    @Override
-    public void update(float temp, float humidity, float pressure) {
-        lastPressure = currentPressure;
-        currentPressure = pressure;
+    public void update(Observable obs, Object arg) {
+        if(obs instanceof WeatherData) {
+            WeatherData weatherData = (WeatherData) obs;
+            lastPressure = currentPressure;
+            currentPressure = weatherData.getPressure();
 
-        display();
+            display();
+        }
     }
 
     @Override

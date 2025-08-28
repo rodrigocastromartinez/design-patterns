@@ -1,37 +1,21 @@
 package me.rodrigo.book.weatherStation;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class WeatherData implements Subject {
+public class WeatherData extends Observable {
     private ArrayList<Observer> observers; // atributos
     private float temperature;
     private float humidity;
     private float pressure;
 
     public WeatherData() { // constructor
-        observers = new ArrayList<Observer>();
-    }
 
-    public void registerObserver(Observer o) {
-        observers.add(o);
-    }
-
-    public void removeObserver(Observer o) {
-        int index = observers.indexOf(o);
-
-        if(index >= 0) {
-            observers.remove(index);
-        }
-    }
-
-    public void notifyObservers() {
-        for (int i = 0; i < observers.size(); i++) {
-            Observer observer = observers.get(i);
-            observer.update(temperature, humidity, pressure);
-        }
     }
 
     public void measurementsChanged() {
+        setChanged();
         notifyObservers();
     }
 
@@ -41,5 +25,17 @@ public class WeatherData implements Subject {
         this.pressure = pressure;
 
         measurementsChanged();
+    }
+
+    public float getTemperature() {
+        return temperature;
+    }
+
+    public float getHumidity() {
+        return humidity;
+    }
+
+    public float getPressure() {
+        return pressure;
     }
 }

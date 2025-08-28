@@ -1,13 +1,17 @@
 package me.rodrigo.book.weatherStation;
 
+import java.util.Observer;
+import java.util.Observable;
+
 public class HeatIndexDisplay implements Observer, DisplayElement {
+    Observable observable;
     float heatIndex = 0.0f;
+    private float temperature;
+    private float humidity;
 
-    private WeatherData weatherData;
-
-    public HeatIndexDisplay(WeatherData weatherData) {
-        this.weatherData = weatherData;
-        weatherData.registerObserver(this);
+    public HeatIndexDisplay(Observable observable) {
+        this.observable = observable;
+        observable.addObserver(this);
     }
 
     private float computeHeatIndex(float t, float rh) {
@@ -21,11 +25,16 @@ public class HeatIndexDisplay implements Observer, DisplayElement {
                 (0.0000000000481975 * (t * t * t * rh * rh * rh)));
     }
 
-    @Override
-    public void update(float temperature, float humidity, float pressure) {
-        heatIndex = computeHeatIndex(temperature, humidity);
+    public void update(Observable obs, Object arg) {
+        if(obs instanceof WeatherData) {
+            WeatherData weatherData = (WeatherData) obs;
+            temperature = weatherData.getTemperature();
+            humidity = weatherData.getHumidity();
 
-        display();
+            heatIndex = computeHeatIndex(temperature, humidity);
+
+            display();
+        }
     }
 
     @Override
